@@ -3,11 +3,17 @@ const axios = require('axios')
 const Discord = require('discord.js')
 const client = new Discord.Client()
 
+// variables
+const coinId = "plutusdao";
+const guildId = "812413964113412187";
+const botsecret = "OTc5MzA5NDA2MDA3MjMwNDY0.GNplkT.9RVVDUz4x6uQFcXhat8vo211O_d8iR3yQDcJn4";
+
+
 function getPrices() {
 
 
 	// API for price data.
-	axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${process.env.PREFERRED_CURRENCY}&ids=${process.env.COIN_ID}`).then(res => {
+	axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=plutusdao`).then(res => {
 		// If we got a valid response
 		if(res.data && res.data[0].current_price && res.data[0].price_change_percentage_24h) {
 			let currentPrice = res.data[0].current_price || 0 // Default to zero
@@ -21,12 +27,13 @@ function getPrices() {
 				}
 			})
 
-			client.guilds.find(guild => guild.id === process.env.SERVER_ID).me.setNickname(`${(currentPrice).toLocaleString().replace(/,/g,process.env.THOUSAND_SEPARATOR)}${process.env.CURRENCY_SYMBOL}`)
-
 			console.log('Updated price to', currentPrice)
+			
+			client.guilds.find(guild => guild.id === guildId).me.setNickname(`${symbol.toUpperCase()} - $${(currentPrice)}`)
+
 		}
 		else
-			console.log('Could not load player count data for', process.env.COIN_ID)
+			console.log('Could not load player count data for', 'plutusdao')
 
 	}).catch(err => console.log('Error at api.coingecko.com data:', err))
 }
@@ -41,4 +48,4 @@ client.on('ready', () => {
 })
 
 // Login to Discord
-client.login(process.env.DISCORD_TOKEN)
+client.login(`${botsecret}`)
